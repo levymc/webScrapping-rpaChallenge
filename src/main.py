@@ -19,7 +19,7 @@ class App:
       try:
           self.handleSiteAccess()
           print("Acessou o site")
-          
+
           for i in range(len(formInfo)):
             
             self.handleInputLoop(i)
