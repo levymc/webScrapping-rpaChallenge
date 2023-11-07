@@ -20,57 +20,49 @@ class App:
           self.handleSiteAccess()
           print("Acessou o site")
           
-          self.handleInputLoop()
-          # self.inputComplete('//*[@ng-reflect-name="labelPhone"]', '16997330060', "Clicou no Phone Number", "Error to interact with PhoneNumber")
-          # print("Preencheu o Phone Number")
-          # self.inputComplete('//*[@ng-reflect-name="labelAddress"]', '98 North Road', "Clicou no Address", "Error to interact with Address")
-          # print("Preencheu o Address")
-          # self.inputComplete('//*[@ng-reflect-name="labelFirstName"]', 'Levy', "Clicou no FirstName", "Error to interact with FirstName")
-          # print("Preencheu o FirstName")
-          # self.inputComplete('//*[@ng-reflect-name="labelLastName"]', 'Cruz', "Clicou no labelLastName", "Error to interact with labelLastName")
-          # print("Preencheu o labelLastName")
-          # self.inputComplete('//*[@ng-reflect-name="labelCompanyName"]', 'LMC Factory', "Clicou no labelCompanyName", "Error to interact with labelCompanyName")
-          # print("Preencheu o labelCompanyName")
-          # self.inputComplete('//*[@ng-reflect-name="labelEmail"]', 'levymcruz@gmail.com', "Clicou no labelEmail", "Error to interact with labelEmail")
-          # print("Preencheu o labelEmail")
-          # self.inputComplete('//*[@ng-reflect-name="labelRole"]', 'Analyst', "Clicou no labelRole", "Error to interact with labelRole")
-          # print("Preencheu o labelRole")
-          # time.sleep(5)
-          
+          for i in range(len(formInfo)):
+            
+            self.handleInputLoop(i)
+            print("Inputou todos os dados do form")
+            
+            time.sleep(3)
+            
+            self.driver.find_element(By.XPATH, '/html/body/app-root/div[2]/app-rpa1/div/div[2]/form/input').click()
+            print("Clicou no Submit")
+            
+            time.sleep(2)
+            
+            
+            
+
       finally:
           self.driver.quit()
           
     def handleSiteAccess(self):
-      self.driver.get("https://rpachallenge.com/")
-      self.wait.until(EC.presence_of_element_located((By.XPATH, '/html/body/app-root/div[2]/app-rpa1/div/div[2]')))
-      print("Accessed RPA Chanllenge")
+      try:
+        self.driver.get("https://rpachallenge.com/")
+        self.wait.until(EC.presence_of_element_located((By.XPATH, '/html/body/app-root/div[2]/app-rpa1/div/div[2]')))
+        print("Accessed RPA Chanllenge")
+      except Exception as e:
+        logging.error(f"Error handleSiteAccess: {e}")
     
-    def handleInputLoop(self):
-      for field in formInfo:
-        self.inputComplete(field['xpath'], field['value'], field['printMsg'], field['error_msg'])
-      time.sleep(5)
+    def handleInputLoop(self, i):
+      try:
+        for field in formInfo[i]:
+          self.inputComplete(field['xpath'], field['value'], field['printMsg'], field['error_msg'])
+      except Exception as e:
+        logging.error(f"Error handleInputLoop: {e}")
     
     def inputComplete(self, xpath, text, printMsg, error_message):
       try:
-        phoneNumberInput = self.driver.find_element(By.XPATH, xpath)
-        phoneNumberInput.click()
-        phoneNumberInput.send_keys(text)
+        element = self.driver.find_element(By.XPATH, xpath)
+        element.click()
+        element.send_keys(text)
         print(printMsg)
       except Exception as e:
         print(error_message, {str(e)})
         logging.error(error_message)
       
-    
-    # def clickPhoneNumberInput(self):
-    #   try:
-    #     phoneNumberInput = self.driver.find_element(By.XPATH, '//*[@ng-reflect-name="labelPhone"]')
-    #     phoneNumberInput.click()
-    #     phoneNumberInput.send_keys('16997330060')
-    #     print("Clicou no Phone Number")
-    #   except Exception as e:
-    #     error_message = f"Erro ao acessar os anúncios"
-    #     print(error_message, {str(e)})
-    #     logging.error(error_message)
 
 if __name__ == "__main__":
     app = App()
