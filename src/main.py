@@ -7,7 +7,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 import logging
 import time
-import asyncio
+from formInfo import formInfo
 
 logging.basicConfig(filename='log.log', level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
 class App:
@@ -17,28 +17,38 @@ class App:
 
     def execute(self):
       try:
-          self.driver.get("https://rpachallenge.com/")
-          self.wait.until(EC.presence_of_element_located((By.XPATH, '/html/body/app-root/div[2]/app-rpa1/div/div[2]')))
-          print("Access RPA Chanllenge")
+          self.handleSiteAccess()
+          print("Acessou o site")
           
-          self.inputComplete('//*[@ng-reflect-name="labelPhone"]', '16997330060', "Clicou no Phone Number", "Error to interact with PhoneNumber")
-          print("Preencheu o Phone Number")
-          self.inputComplete('//*[@ng-reflect-name="labelAddress"]', '98 North Road', "Clicou no Address", "Error to interact with Address")
-          print("Preencheu o Address")
-          self.inputComplete('//*[@ng-reflect-name="labelFirstName"]', 'Levy', "Clicou no FirstName", "Error to interact with FirstName")
-          print("Preencheu o FirstName")
-          self.inputComplete('//*[@ng-reflect-name="labelLastName"]', 'Cruz', "Clicou no labelLastName", "Error to interact with labelLastName")
-          print("Preencheu o labelLastName")
-          self.inputComplete('//*[@ng-reflect-name="labelCompanyName"]', 'LMC Factory', "Clicou no labelCompanyName", "Error to interact with labelCompanyName")
-          print("Preencheu o labelCompanyName")
-          self.inputComplete('//*[@ng-reflect-name="labelEmail"]', 'levymcruz@gmail.com', "Clicou no labelEmail", "Error to interact with labelEmail")
-          print("Preencheu o labelEmail")
-          self.inputComplete('//*[@ng-reflect-name="labelRole"]', 'Analyst', "Clicou no labelRole", "Error to interact with labelRole")
-          print("Preencheu o labelRole")
-          time.sleep(5)
+          self.handleInputLoop()
+          # self.inputComplete('//*[@ng-reflect-name="labelPhone"]', '16997330060', "Clicou no Phone Number", "Error to interact with PhoneNumber")
+          # print("Preencheu o Phone Number")
+          # self.inputComplete('//*[@ng-reflect-name="labelAddress"]', '98 North Road', "Clicou no Address", "Error to interact with Address")
+          # print("Preencheu o Address")
+          # self.inputComplete('//*[@ng-reflect-name="labelFirstName"]', 'Levy', "Clicou no FirstName", "Error to interact with FirstName")
+          # print("Preencheu o FirstName")
+          # self.inputComplete('//*[@ng-reflect-name="labelLastName"]', 'Cruz', "Clicou no labelLastName", "Error to interact with labelLastName")
+          # print("Preencheu o labelLastName")
+          # self.inputComplete('//*[@ng-reflect-name="labelCompanyName"]', 'LMC Factory', "Clicou no labelCompanyName", "Error to interact with labelCompanyName")
+          # print("Preencheu o labelCompanyName")
+          # self.inputComplete('//*[@ng-reflect-name="labelEmail"]', 'levymcruz@gmail.com', "Clicou no labelEmail", "Error to interact with labelEmail")
+          # print("Preencheu o labelEmail")
+          # self.inputComplete('//*[@ng-reflect-name="labelRole"]', 'Analyst', "Clicou no labelRole", "Error to interact with labelRole")
+          # print("Preencheu o labelRole")
+          # time.sleep(5)
           
       finally:
           self.driver.quit()
+          
+    def handleSiteAccess(self):
+      self.driver.get("https://rpachallenge.com/")
+      self.wait.until(EC.presence_of_element_located((By.XPATH, '/html/body/app-root/div[2]/app-rpa1/div/div[2]')))
+      print("Accessed RPA Chanllenge")
+    
+    def handleInputLoop(self):
+      for field in formInfo:
+        self.inputComplete(field['xpath'], field['value'], field['printMsg'], field['error_msg'])
+      time.sleep(5)
     
     def inputComplete(self, xpath, text, printMsg, error_message):
       try:
